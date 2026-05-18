@@ -727,7 +727,7 @@
   </div>
 
   <script>
-    const PRICES = { egg: 99, affogato: 79, dulce: 69 };
+    const PRICES = { egg: 99, affogato: 89, dulce: 69 };
     const NAMES  = { egg: 'Vietnamese Egg Coffee', affogato: 'Yema Affogato', dulce: 'Dulce de Leche' };
     const qty    = { egg: 0, affogato: 0, dulce: 0 };
     let orderType = 'pickup';
@@ -837,7 +837,7 @@
       var eggQty      = qty.egg;
       var affogatoQty = qty.affogato;
       var dulceQty    = qty.dulce;
-      var subtotal    = (eggQty * 99) + (affogatoQty * 79) + (dulceQty * 69);
+      var subtotal    = (eggQty * 99) + (affogatoQty * 89) + (dulceQty * 69);
       var hasFee      = (orderType === 'delivery' && deliveryLocation === 'outside');
       var total       = subtotal + (hasFee ? DELIVERY_FEE : 0);
 
