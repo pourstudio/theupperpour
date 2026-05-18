@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Place an Order — The Upper Pour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Josefin+Sans:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:      #EDE8E1;
+      --crimson:    #8B1A2B;
+      --burgundy:   #A0223A;
+      --near-black: #1A1A1A;
+      --warm-gray:  #C9C2B8;
+      --warm-white: #F7F3EE;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--near-black);
+      font-family: 'Josefin Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(237,232,225,0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(139,26,43,0.12);
+    }
+    .nav-logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.5rem;
+      color: var(--crimson);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 28px; list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--near-black);
+      text-decoration: none;
+      opacity: 0.55;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { opacity: 1; color: var(--crimson); }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 48px 80px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    /* ── LEFT: FORM ── */
+    .form-side {
+      animation: fadeUp 0.7s ease both;
+    }
+    .page-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      opacity: 0.75;
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(2.4rem, 4vw, 3.5rem);
+      color: var(--crimson);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .page-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      opacity: 0.5;
+      margin-bottom: 40px;
+    }
+
+    /* ── FORM BLOCKS ── */
+    .form-block {
+      margin-bottom: 36px;
+    }
+    .block-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 16px;
+      display: block;
+      border-left: 2px solid var(--crimson);
+      padding-left: 10px;
+    }
+
+    /* ── INPUTS ── */
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .input-row.full { grid-template-columns: 1fr; }
+    .field-wrap { display: flex; flex-direction: column; gap: 6px; }
+    .field-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    input[type="text"],
+    input[type="tel"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--warm-white);
+      border: 1px solid var(--warm-gray);
+      border-radius: 0;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--near-black);
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--crimson);
+    }
+    input[type="text"]::placeholder,
+    input[type="tel"]::placeholder,
+    textarea::placeholder { opacity: 0.38; }
+    textarea { resize: vertical; min-height: 90px; }
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238B1A2B' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+    /* ── DELIVERY TOGGLE ── */
+    .toggle-wrap {
+      display: flex;
+      gap: 0;
+      margin-bottom: 14px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 14px 12px;
+      border: 1px solid var(--warm-gray);
+      background: var(--warm-white);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--near-black);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.6;
+      /* Make sure these are actual buttons that work */
+      -webkit-appearance: none;
+      appearance: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .toggle-btn:first-child { border-right: none; }
+    .toggle-btn.active {
+      background: var(--crimson);
+      border-color: var(--crimson);
+      color: var(--cream);
+      opacity: 1;
+    }
+    .toggle-btn:hover:not(.active) {
+      opacity: 0.85;
+      border-color: var(--crimson);
+    }
+
+    /* ── DRINK ITEMS ── */
+    .drink-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--warm-white);
+      border: 1px solid var(--warm-gray);
+      margin-bottom: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .drink-item.has-qty {
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 1px var(--crimson);
+    }
+    .drink-info { display: flex; flex-direction: column; gap: 3px; }
+    .drink-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .drink-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--crimson);
+      opacity: 0.8;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .qty-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--warm-gray);
+      background: var(--cream);
+      color: var(--near-black);
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      font-family: 'Josefin Sans', sans-serif;
+      /* Critical: make sure button works */
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      border-radius: 0;
+      padding: 0;
+    }
+    .qty-btn:hover,
+    .qty-btn:active {
+      background: var(--crimson);
+      border-color: var(--crimson);
+      color: var(--cream);
+    }
+    .qty-num {
+      font-size: 0.95rem;
+      font-weight: 700;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    /* ── LOCATION SUB-TOGGLE ── */
+    .sub-toggle-wrap {
+      margin-bottom: 0;
+    }
+    .sub-toggle-label {
+      display: block;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+    .sub-toggle-row {
+      display: flex;
+      gap: 0;
+    }
+    .sub-toggle-btn {
+      flex: 1;
+      padding: 11px 10px;
+      border: 1px solid var(--warm-gray);
+      background: var(--warm-white);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--near-black);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+      -webkit-appearance: none;
+      appearance: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sub-toggle-btn:first-child { border-right: none; }
+    .sub-toggle-btn.active {
+      background: var(--crimson);
+      border-color: var(--crimson);
+      color: var(--cream);
+      opacity: 1;
+    }
+    .sub-toggle-btn:hover:not(.active) {
+      opacity: 0.8;
+      border-color: var(--crimson);
+    }
+
+    /* ── ADDRESS (hidden by default) ── */
+    .address-wrap {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .address-wrap.visible {
+      max-height: 120px;
+      opacity: 1;
+      margin-top: 10px;
+    }
+
+    /* ── SUBMIT ── */
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: var(--crimson);
+      color: var(--cream);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.18s;
+      margin-top: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--burgundy);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-note {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      opacity: 0.38;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── RIGHT: SUMMARY ── */
+    .summary-side {
+      position: sticky;
+      top: 100px;
+      animation: fadeUp 0.7s 0.12s ease both;
+    }
+    .summary-card {
+      background: #D9D2C8;
+      color: var(--near-black);
+      padding: 36px 32px;
+      border: 1px solid #C4BAB0;
+    }
+    .summary-logo {
+      width: 90px;
+      margin-bottom: 20px;
+      filter: sepia(1) saturate(0.5) brightness(0.75);
+      opacity: 0.6;
+    }
+    .summary-title {
+      font-size: 0.62rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--near-black);
+      opacity: 0.45;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(26,26,26,0.15);
+      padding-bottom: 16px;
+    }
+    .summary-empty {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--near-black);
+      opacity: 0.4;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+    .summary-lines { margin-bottom: 20px; }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      font-size: 0.8rem;
+    }
+    .summary-line-name { opacity: 0.65; letter-spacing: 0.06em; }
+    .summary-line-price { color: var(--crimson); font-weight: 600; }
+    .summary-fee-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      font-size: 0.78rem;
+      margin-bottom: 0;
+    }
+    .summary-fee-label {
+      opacity: 0.65;
+      letter-spacing: 0.04em;
+    }
+    .summary-fee-note {
+      display: block;
+      font-size: 0.65rem;
+      opacity: 0.6;
+      margin-top: 2px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      letter-spacing: 0;
+    }
+    .summary-fee-amount {
+      color: var(--crimson);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(26,26,26,0.2);
+    }
+    .summary-total-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+    .summary-total-amount {
+      font-family: 'Satisfy', cursive;
+      font-size: 2rem;
+      color: var(--crimson);
+    }
+    .summary-delivery-note {
+      margin-top: 16px;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--near-black);
+      opacity: 0.4;
+      line-height: 1.7;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px;
+    }
+    .success-overlay.show {
+      display: flex;
+      animation: fadeUp 0.5s ease both;
+    }
+    .success-icon {
+      width: 64px; height: 64px;
+      border: 2px solid var(--crimson);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+    }
+    .success-icon svg { width: 28px; height: 28px; stroke: var(--crimson); fill: none; stroke-width: 2.5; }
+    .success-title {
+      font-family: 'Satisfy', cursive;
+      font-size: 3rem;
+      color: var(--crimson);
+      margin-bottom: 12px;
+    }
+    .success-msg {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      opacity: 0.6;
+      max-width: 400px;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .success-back {
+      display: inline-block;
+      padding: 13px 32px;
+      border: 1px solid var(--crimson);
+      color: var(--crimson);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .success-back:hover { background: var(--crimson); color: var(--cream); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      nav { padding: 16px 20px; }
+      .nav-logo { font-size: 1.2rem; }
+
+      .page-wrap {
+        grid-template-columns: 1fr;
+        padding: 90px 20px 60px;
+        gap: 32px;
+      }
+
+      /* Summary stacks below the form on mobile */
+      .summary-side {
+        position: static;
+      }
+
+      .summary-card {
+        padding: 24px 20px;
+      }
+
+      .input-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .drink-item {
+        padding: 14px 16px;
+      }
+
+      .qty-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 2.2rem;
+      }
+
+      .toggle-btn {
+        padding: 14px 8px;
+        font-size: 0.68rem;
+      }
+
+      .drink-name {
+        font-size: 0.75rem;
+      }
+
+      .summary-total-amount {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">the upper pour</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="order.html" class="active">Order</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="success-title">Order Placed!</div>
+    <p class="success-msg">
+      We got your order and we&rsquo;re on it. Expect a message from us shortly to confirm your details.
+    </p>
+    <a href="index.html" class="success-back">Back to Home</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="page-wrap">
+
+    <!-- LEFT: FORM -->
+    <div class="form-side">
+      <p class="page-eyebrow">Place Your Order</p>
+      <h1 class="page-title">Order Form</h1>
+      <p class="page-sub">Fill in your details and we&rsquo;ll take care of the rest.</p>
+
+      <!-- CONTACT INFO -->
+      <div class="form-block">
+        <span class="block-label">Your Details</span>
+        <div class="input-row">
+          <div class="field-wrap">
+            <span class="field-label">Full Name *</span>
+            <input type="text" id="custName" placeholder="e.g. Maria Santos" autocomplete="name" />
+          </div>
+          <div class="field-wrap">
+            <span class="field-label">Contact Number *</span>
+            <input type="tel" id="custPhone" placeholder="e.g. 09171234567" autocomplete="tel" />
+          </div>
+        </div>
+      </div>
+
+      <!-- PICKUP / DELIVERY -->
+      <div class="form-block">
+        <span class="block-label">Order Type</span>
+        <div class="toggle-wrap">
+          <button type="button" class="toggle-btn active" id="btnPickup" onclick="setType('pickup')">Pickup</button>
+          <button type="button" class="toggle-btn" id="btnDelivery" onclick="setType('delivery')">Delivery</button>
+        </div>
+        <div class="address-wrap" id="addressWrap">
+          <!-- Location sub-toggle (only shown for delivery) -->
+          <div class="sub-toggle-wrap" id="locationWrap">
+            <span class="sub-toggle-label">Delivery Location</span>
+            <div class="sub-toggle-row">
+              <button type="button" class="sub-toggle-btn active" id="btnWithin" onclick="setLocation('within')">Within Brgy. Kalawaan</button>
+              <button type="button" class="sub-toggle-btn" id="btnOutside" onclick="setLocation('outside')">Outside Brgy. Kalawaan</button>
+            </div>
+          </div>
+          <div class="field-wrap" style="margin-top:12px;">
+            <span class="field-label">Delivery Address *</span>
+            <input type="text" id="custAddress" placeholder="House no., Street, Barangay, City" autocomplete="street-address" />
+          </div>
+        </div>
+      </div>
+
+      <!-- DRINKS -->
+      <div class="form-block">
+        <span class="block-label">Your Order &nbsp;&middot;&nbsp; 16 oz</span>
+
+        <div class="drink-item" id="item-egg">
+          <div class="drink-info">
+            <span class="drink-name">Vietnamese Egg Coffee</span>
+            <span class="drink-price">&#8369;99 / 16 oz</span>
+          </div>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" onclick="changeQty('egg', -1)" aria-label="Decrease quantity">&#8722;</button>
+            <span class="qty-num" id="qty-egg">0</span>
+            <button type="button" class="qty-btn" onclick="changeQty('egg', 1)" aria-label="Increase quantity">&#43;</button>
+          </div>
+        </div>
+
+        <div class="drink-item" id="item-affogato">
+          <div class="drink-info">
+            <span class="drink-name">Yema Affogato</span>
+            <span class="drink-price">&#8369;79 / 16 oz</span>
+          </div>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" onclick="changeQty('affogato', -1)" aria-label="Decrease quantity">&#8722;</button>
+            <span class="qty-num" id="qty-affogato">0</span>
+            <button type="button" class="qty-btn" onclick="changeQty('affogato', 1)" aria-label="Increase quantity">&#43;</button>
+          </div>
+        </div>
+
+        <div class="drink-item" id="item-dulce">
+          <div class="drink-info">
+            <span class="drink-name">Dulce de Leche</span>
+            <span class="drink-price">&#8369;69 / 16 oz</span>
+          </div>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" onclick="changeQty('dulce', -1)" aria-label="Decrease quantity">&#8722;</button>
+            <span class="qty-num" id="qty-dulce">0</span>
+            <button type="button" class="qty-btn" onclick="changeQty('dulce', 1)" aria-label="Increase quantity">&#43;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="form-block">
+        <span class="block-label">Special Instructions</span>
+        <div class="input-row full">
+          <div class="field-wrap">
+            <span class="field-label">Notes (optional)</span>
+            <textarea id="custNotes" placeholder="e.g. less sugar, extra ice, no straw..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="button" class="btn-submit" id="submitBtn" onclick="submitOrder()" disabled>
+        Place Order
+      </button>
+      <p class="form-note">
+        We&rsquo;ll reach out to you via the number you provided to confirm your order.<br/>
+        For inquiries, message us on Facebook or Instagram.
+      </p>
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <div class="summary-side">
+      <div class="summary-card">
+        <div class="summary-title">Order Summary</div>
+        <div id="summaryEmpty" class="summary-empty">No items selected yet.</div>
+        <div class="summary-lines" id="summaryLines"></div>
+        <div class="summary-fee-row" id="summaryFeeRow" style="display:none;">
+          <span class="summary-fee-label">Delivery fee <span class="summary-fee-note">(outside Brgy. Kalawaan)</span></span>
+          <span class="summary-fee-amount">&#8369;5</span>
+        </div>
+        <div class="summary-total">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-amount" id="summaryTotal">&#8369;0</span>
+        </div>
+        <p class="summary-delivery-note" id="deliveryNote"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const PRICES = { egg: 99, affogato: 79, dulce: 69 };
+    const NAMES  = { egg: 'Vietnamese Egg Coffee', affogato: 'Yema Affogato', dulce: 'Dulce de Leche' };
+    const qty    = { egg: 0, affogato: 0, dulce: 0 };
+    let orderType = 'pickup';
+
+    // ── GOOGLE APPS SCRIPT URL ──
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPxMKvlbBoApDgi9rnpCBK_xIf4vT0sPNachISc9k71_0rPUJszOJ390v0tXqWcFSErQ/exec';
+
+    function setType(type) {
+      orderType = type;
+      document.getElementById('btnPickup').classList.toggle('active', type === 'pickup');
+      document.getElementById('btnDelivery').classList.toggle('active', type === 'delivery');
+      var wrap = document.getElementById('addressWrap');
+      wrap.classList.toggle('visible', type === 'delivery');
+      // Reset location to 'within' each time delivery is selected
+      if (type === 'delivery') {
+        setLocation('within');
+      }
+      updateSummary();
+      validate();
+    }
+
+    function changeQty(item, delta) {
+      qty[item] = Math.max(0, qty[item] + delta);
+      document.getElementById('qty-' + item).textContent = qty[item];
+      document.getElementById('item-' + item).classList.toggle('has-qty', qty[item] > 0);
+      updateSummary();
+      validate();
+    }
+
+    var DELIVERY_FEE     = 5;
+    var deliveryLocation = 'within'; // 'within' or 'outside'
+
+    function setLocation(loc) {
+      deliveryLocation = loc;
+      document.getElementById('btnWithin').classList.toggle('active', loc === 'within');
+      document.getElementById('btnOutside').classList.toggle('active', loc === 'outside');
+      updateSummary();
+    }
+
+    function updateSummary() {
+      var lines    = document.getElementById('summaryLines');
+      var empty    = document.getElementById('summaryEmpty');
+      var totalEl  = document.getElementById('summaryTotal');
+      var feeRow   = document.getElementById('summaryFeeRow');
+      var subtotal = 0;
+      var html     = '';
+
+      for (var key in qty) {
+        var q = qty[key];
+        if (q > 0) {
+          var sub = PRICES[key] * q;
+          subtotal += sub;
+          html += '<div class="summary-line">' +
+            '<span class="summary-line-name">' + NAMES[key] + ' x' + q + '</span>' +
+            '<span class="summary-line-price">&#8369;' + sub + '</span>' +
+            '</div>';
+        }
+      }
+
+      var showFee = (orderType === 'delivery' && deliveryLocation === 'outside');
+      var total   = subtotal + (showFee ? DELIVERY_FEE : 0);
+
+      lines.innerHTML = html;
+      empty.style.display = (subtotal === 0) ? 'block' : 'none';
+      feeRow.style.display = showFee ? 'flex' : 'none';
+      totalEl.innerHTML = '&#8369;' + total;
+      updateDeliveryNote();
+    }
+
+    function updateDeliveryNote() {
+      var note = document.getElementById('deliveryNote');
+      if (orderType === 'delivery') {
+        if (deliveryLocation === 'outside') {
+          note.textContent = '\u20B15 delivery fee included for outside Brgy. Kalawaan.';
+        } else {
+          note.textContent = 'Free delivery within Brgy. Kalawaan.';
+        }
+      } else {
+        note.textContent = 'Pickup \u2014 we\u2019ll message you when it\u2019s ready.';
+      }
+    }
+
+    function validate() {
+      var name     = document.getElementById('custName').value.trim();
+      var phone    = document.getElementById('custPhone').value.trim();
+      var address  = document.getElementById('custAddress').value.trim();
+      var hasItems = Object.keys(qty).some(function(k){ return qty[k] > 0; });
+      var hasAddr  = (orderType === 'pickup') || (address.length > 0);
+      document.getElementById('submitBtn').disabled = !(name && phone && hasItems && hasAddr);
+    }
+
+    // Live validation
+    ['custName', 'custPhone', 'custAddress'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', validate);
+    });
+
+    async function submitOrder() {
+      var btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending\u2026';
+
+      var name    = document.getElementById('custName').value.trim();
+      var phone   = document.getElementById('custPhone').value.trim();
+      var address = (orderType === 'delivery') ? document.getElementById('custAddress').value.trim() : 'Pickup';
+      var notes   = document.getElementById('custNotes').value.trim();
+
+      var eggQty      = qty.egg;
+      var affogatoQty = qty.affogato;
+      var dulceQty    = qty.dulce;
+      var subtotal    = (eggQty * 99) + (affogatoQty * 79) + (dulceQty * 69);
+      var hasFee      = (orderType === 'delivery' && deliveryLocation === 'outside');
+      var total       = subtotal + (hasFee ? DELIVERY_FEE : 0);
+
+      var payload = {
+        name:     name,
+        phone:    phone,
+        type:     orderType === 'delivery'
+                    ? ('Delivery (' + (deliveryLocation === 'outside' ? 'Outside' : 'Within') + ' Brgy. Kalawaan)')
+                    : 'Pickup',
+        address:  address,
+        egg:      eggQty,
+        affogato: affogatoQty,
+        dulce:    dulceQty,
+        total:    '\u20B1' + total,
+        notes:    notes || '\u2014'
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('successOverlay').classList.add('show');
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Place Order';
+        alert('Something went wrong. Please message us directly on Facebook or Instagram.');
+      }
+    }
+
+    // Init
+    updateSummary();
+    updateDeliveryNote();
+  </script>
+
+</body>
+</html>
